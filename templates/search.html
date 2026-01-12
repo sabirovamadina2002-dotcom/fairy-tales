@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<a href="/">← Назад</a>
+<h2>
+  {% if mode == 'lemma' %}Результаты поиска по лемме{% else %}Результаты поиска по сущности{% endif %}: "{{ query }}"
+  {% if ent_type_filter %} [{{ ent_type_filter }}] {% endif %}
+</h2>
+
+{% if results %}
+    <p>Найдено: {{ results|length }}</p>
+    <ul>
+    {% for r in results %}
+        <li>
+            <a href="/tale/{{ r.tale_id }}">{{ r.title }}</a>: 
+            <blockquote>
+                {% if mode == 'lemma' %}
+                    {{ r.context | replace(query, '<mark>' + query + '</mark>') | safe }}
+                {% elif mode == 'entity' %}
+                    {{ r.context | replace(r.entity_text, '<mark>' + r.entity_text + '</mark>') | safe }}
+                {% endif %}
+            </blockquote>
+            {% if mode == 'entity' %}
+                <small>[{{ r.entity_type }}: {{ r.entity_text }}]</small>
+            {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Ничего не найдено.</p>
+{% endif %}
+{% endblock %}

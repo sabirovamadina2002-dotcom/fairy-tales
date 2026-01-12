@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="stats-box">
+    <p>✅ <strong>{{ total }}</strong> сказок</p>
+    <p>📖 Все тексты взяты с сайта <a href="https://www.ziyouz.uz" target="_blank">ziyouz.uz</a></p>
+    <p>Этот корпус может быть полезен:</p>
+    <ul>
+        <li><strong>переводчикам</strong> — для изучения фольклорной лексики;</li>
+        <li><strong>учителям</strong> — для подготовки материалов по межкультурной коммуникации;</li>
+        <li><strong>лингвистам</strong> — для анализа нарративных структур и именованных сущностей;</li>
+        <li><strong>исследователям цифровых гуманитарных наук</strong> — для визуализации культурных паттернов.</li>
+    </ul>
+    <p>🔍 Возможности поиска: по <strong>леммам</strong> (например, «думать») и <strong>именованным сущностям</strong> (PER, LOC).</p>
+</div>
+
+<form method="get" action="/search" class="search-form">
+    <select name="mode" id="mode" onchange="toggleEntityType()">
+        <option value="lemma">По лемме</option>
+        <option value="entity">По именованной сущности</option>
+    </select>
+
+    <select name="ent_type" id="ent_type" style="display: none;">
+        <option value="">Все типы</option>
+        <option value="PER">Персона (PER)</option>
+        <option value="LOC">Место (LOC)</option>
+        <!-- ORG удалён -->
+    </select>
+
+    <input type="text" name="q" placeholder="Например: думать, Нодир, Бухара..." required>
+    <button type="submit">Найти</button>
+</form>
+
+<ul>
+{% for tid, tale in tales %}
+    <li><a href="/tale/{{ tid }}">{{ tale.metadata.title }}</a></li>
+{% endfor %}
+</ul>
+
+{% if pages > 1 %}
+<nav class="pagination">
+    {% for p in range(1, pages + 1) %}
+        {% if p == page %}
+            <strong>{{ p }}</strong>
+        {% else %}
+            <a href="?page={{ p }}">{{ p }}</a>
+        {% endif %}
+    {% endfor %}
+</nav>
+{% endif %}
+
+<script>
+function toggleEntityType() {
+    const mode = document.getElementById('mode').value;
+    const entSelect = document.getElementById('ent_type');
+    entSelect.style.display = (mode === 'entity') ? 'inline' : 'none';
+}
+</script>
+{% endblock %}

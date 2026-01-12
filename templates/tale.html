@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<a href="/">← Назад</a>
+<h2>{{ tale.metadata.title }}</h2>
+<p><strong>Сборщик:</strong> {{ tale.metadata.collector or '—' }}</p>
+<p><strong>Переводчик:</strong> {{ tale.metadata.translator or '—' }}</p>
+<p><strong>Источник:</strong> <a href="{{ tale.id }}" target="_blank">{{ tale.id }}</a></p>
+<hr>
+<div class="tale-text">
+  {% for para in tale.html_text.split('\n') %}
+    {% if para.strip() %}
+      <p>{{ para | safe }}</p>
+    {% endif %}
+  {% endfor %}
+</div>
+{% endblock %}
