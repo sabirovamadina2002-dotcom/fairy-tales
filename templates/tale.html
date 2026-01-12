@@ -7,10 +7,15 @@
 <p><strong>Источник:</strong> <a href="{{ tale.id }}" target="_blank">{{ tale.id }}</a></p>
 <hr>
 <div class="tale-text">
-  {% for para in tale.html_text.split('\n') %}
-    {% if para.strip() %}
-      <p>{{ para | safe }}</p>
-    {% endif %}
+  {% for sent in tale.sentences %}
+    <p>
+      {% for token in sent.tokens %}
+        {% if token.form.strip() != '' %}
+          <span class="lemma-word" title="Лемма: {{ token.lemma }}">{{ token.form }}</span>
+          {% if not loop.last %}&nbsp;{% endif %}
+        {% endif %}
+      {% endfor %}
+    </p>
   {% endfor %}
 </div>
 {% endblock %}
